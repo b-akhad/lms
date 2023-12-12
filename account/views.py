@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from . import serializers
 from lms.authenticate import CustomAuthentication
+from .models import StudentInfo
 
 
 
@@ -56,3 +57,9 @@ class WhoAmIView(APIView):
     def get(self, format=None):
         serializer = serializers.UserSerializer(self.request.user)
         return Response(serializer.data)
+
+
+class StudentInfoCreateApiView(generics.CreateAPIView):
+    queryset = StudentInfo.objects.all()
+    serializer_class = serializers.StudentInfoCreateSerializer
+

@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 from django.contrib.auth.models import Group
+from .models import StudentInfo
 
 
 # admin.site.unregister(Group)
@@ -25,17 +26,30 @@ class UserAdmin(UserAdmin):
     form = UserAdminChangeForm
     add_form = UserAdminCreationForm
     fieldsets = (
-        (None, {'fields': ('username', 'email', 'password','first_name', 'last_name',"pinfl",'role','organization')}),
+        (None, {'fields': ('username', 'email', 'password','first_name', 'last_name','role','group')}),
         ("Ruxsatlar", {'fields': ( 'is_active', 'is_staff', 'groups', 'user_permissions')}),
     )
     add_fieldsets = None
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'email', 'password', 'password_2', 'is_staff', 'is_active', 'groups', 'user_permissions')
+            'fields': ('username', 'email', 'password', 'password_2',
+                       'is_staff', 'role','group','is_active', 'groups', 'user_permissions')
             }
          ),
     )
 
 
+# class GroupAdmin(admin.ModelAdmin):
+#     list_display = ['name']
+
+from .models import Group
+
 admin.site.register(User, UserAdmin)
+admin.site.register(Group)
+
+
+@admin.register(StudentInfo)
+class StAdmin(admin.ModelAdmin):
+    list_display = ['student','gender','dob','photo']
+
