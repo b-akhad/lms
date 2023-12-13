@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 import account.models
-from .models import Schedule, Attendance, StudentScores
+from .models import Schedule, Attendance, StudentScores,Subject
 
 from account.models import StudentInfo
 
@@ -86,3 +86,7 @@ class ScoreStudentCreateSerializer(serializers.ModelSerializer):
 
 
 
+class SubjectsListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = ['id','name']

@@ -7,7 +7,7 @@ from rest_framework.decorators import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Schedule, Attendance, StudentScores
+from .models import Schedule, Attendance, StudentScores,Subject
 from account.permissions import IsTeacher,IsStudent
 from account.models import Group
 
@@ -111,7 +111,6 @@ class StudentAttendanceListApiView(ListAPIView):
         return context
 
 
-
 class StudentAttendanceUpdateApiView(APIView):
     permission_classes = [IsAuthenticated,IsTeacher]
     def put(self,request,pk):
@@ -127,6 +126,7 @@ class StudentAttendanceUpdateApiView(APIView):
 
 class StudentScoreCreateApiView(APIView):
     permission_classes = [IsAuthenticated,IsTeacher]
+
     def post(self,request):
         serialized = serializers.ScoreStudentCreateSerializer(data=request.data)
         if serialized.is_valid():
@@ -135,3 +135,11 @@ class StudentScoreCreateApiView(APIView):
         return Response({"error":serialized.errors})
 
 
+class StudentSubjectsListApiView(ListAPIView):
+    permission_classes = [IsAuthenticated,IsStudent]
+    serializer_class = serializers.SubjectsListSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        subjects = Subject.objects.filter(groups=user.group)
+        return subjects
