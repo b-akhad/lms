@@ -63,3 +63,18 @@ class StudentInfoCreateApiView(generics.CreateAPIView):
     queryset = StudentInfo.objects.all()
     serializer_class = serializers.StudentInfoCreateSerializer
 
+
+class StudentInfoApiView(APIView):
+    def get(self,request):
+        user = request.user
+        student_info = StudentInfo.objects.get(student=user)
+        info_serializer = serializers.StudentInfoCreateSerializer(student_info)
+
+        data = info_serializer.data
+        data['email'] = user.email
+        data['first_name'] = user.first_name
+        data['last_name'] = user.last_name
+
+        return Response(data, status=status.HTTP_200_OK)
+
+
