@@ -87,6 +87,14 @@ class ScoreStudentCreateSerializer(serializers.ModelSerializer):
 
 
 class SubjectsListSerializer(serializers.ModelSerializer):
+    absents = serializers.SerializerMethodField()
     class Meta:
         model = Subject
-        fields = ['id','name']
+        fields = ['id','name','absents']
+
+    def get_absents(self,instance:Subject):
+        user = self.context['request'].user
+        schedules = Schedule.objects.filter(group=user.group,subject=instance)
+        attendance = Attendance.objects.filter(student=user,schedule__in=schedules,is_attended=False)
+        return attendance.count()
+
